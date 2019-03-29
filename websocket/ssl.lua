@@ -15,6 +15,7 @@ ffi.cdef[[
  typedef struct SSL_METHOD {} SSL_METHOD;
  typedef struct SSL_CTX {} SSL_CTX;
  typedef struct SSL {} SSL;
+ typedef struct ossl_init_settings_st OPENSSL_INIT_SETTINGS;
 
  const SSL_METHOD *TLS_method(void);
  const SSL_METHOD *TLS_server_method(void);
@@ -52,6 +53,7 @@ ffi.cdef[[
  const SSL_METHOD *DTLSv1_2_server_method(void);
  const SSL_METHOD *DTLSv1_2_client_method(void);
 
+ int OPENSSL_init_ssl(uint64_t opts, const OPENSSL_INIT_SETTINGS *settings);
  int SSL_library_init(void);
  void SSL_load_error_strings(void);
 
@@ -93,12 +95,12 @@ ffi.cdef[[
         const void *needle, size_t needlelen);
 ]]
 
-ffi.C.SSL_library_init()
-ffi.C.SSL_load_error_strings()
+ffi.C.OPENSSL_init_ssl(0, NULL)
+-- ffi.C.SSL_load_error_strings()
 
 local methods = {
-    sslv23 = ffi.C.SSLv23_method(),
-    sslv3 = ffi.C.SSLv3_method(),
+--    sslv23 = ffi.C.SSLv23_method(),
+--    sslv3 = ffi.C.SSLv3_method(),
     tlsv1 = ffi.C.TLSv1_method(),
     tlsv11 = ffi.C.TLSv1_1_method(),
 }
@@ -116,7 +118,7 @@ local X509_FILETYPE_ASN1      =2
 local X509_FILETYPE_DEFAULT   =3
 
 local function ctx(method)
-    method = method or ffi.C.SSLv23_method()
+    method = method or ffi.C.TLSv1_method()
 
     ffi.C.ERR_clear_error()
     local newctx =
