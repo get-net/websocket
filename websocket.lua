@@ -604,13 +604,13 @@ function wspeer.connect(url, request, options)
     local sock, err
     if sslon then
         ssl = require('websocket.ssl')
-        sock, err = ssl.tcp_connect(url.host, tonumber(url.service),
+        sock, err = ssl.tcp_connect(url.host, url.service,
                                     options.timeout, options.ctx)
         if not sock then
             return sock, err
         end
     else
-        sock = socket.tcp_connect(url.host, tonumber(url.service),
+        sock = socket.tcp_connect(url.host, url.service,
                                   options.timeout)
         if not sock then
             return sock, errno.strerror()
