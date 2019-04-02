@@ -648,7 +648,7 @@ function wspeer.server(url, handler, options)
     if sslon then
         ssl = require('websocket.ssl')
         return ssl.tcp_server(
-            url.host, tonumber(url.service),
+            url.host, url.service,
             function (sock)
                 local client = wspeer.new(sock, options.ping_frequency)
                 return handler(client)
@@ -657,7 +657,7 @@ function wspeer.server(url, handler, options)
             options.ctx)
     else
         return socket.tcp_server(
-            url.host, tonumber(url.service),
+            url.host, url.service,
             function (sock)
                 local client = wspeer.new(sock, options.ping_frequency)
                 return handler(client)
